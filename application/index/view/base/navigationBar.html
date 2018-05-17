@@ -1,0 +1,38 @@
+<!--网站顶部导航条-->
+<div class="top">
+    <div class="wrap">
+        <div class="logo fl">
+            <img src="static/logo/{$web.logo}" />
+        </div>
+        <div class="nav fl">
+            <ul>
+                <li {$on1|default=''}>
+                    <a href="index">{$web.indexName|default='首页'}</a>
+                </li>
+                <li {$on2|default=''}>
+                    <a href="Game">{$web.gameName|default='游戏中心'}</a>
+                </li>
+                <li {$on3|default=''}>
+                    <a href="news">{$web.newsName|default='新闻中心'}</a>
+                </li>
+                <li {$on4|default=''}>
+                    <a href="aboutAsPage">{$web.aboutAsName|default='关于我们'}</a>
+                </li>
+                <li {$on5|default=''}>
+                    <a href="joinUs">{$web.joinUsName|default='加入我们'}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="share fl">
+            <div class="share_fenlei weixin fl">
+                <img src="img/weixin.png" />
+                <div class="erweima">
+                    <img src="static/QRCode/{$web.weiXinUrl|default=''}" />
+                </div>
+            </div>
+            <div class="share_fenlei fl">
+                <a href="{$web.weiBoLink|default=''}"><img src="img/weibo.png" /></a>
+            </div>
+        </div>
+    </div>
+</div>

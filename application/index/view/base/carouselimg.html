@@ -1,0 +1,31 @@
+<!--每一页的轮播图-->
+<div class="banner">
+    <ul>
+        {volist name='carouselimgList' id='vo'}
+            {switch name="$key"}
+            {case value="0" break="1"}
+            <li class="on">
+                <a href="{$vo.Link}"><img src="static/carouselimg/{$vo.Url}" alt="" /></a>
+            </li>
+            {/case}
+            {default}
+            <li>
+                <a href="{$vo.Link}"><img src="static/carouselimg/{$vo.Url}" alt="" /></a>
+            </li>
+            {/switch}
+        {/volist}
+    </ul>
+    <div class="banner-dot">
+        <div class="dot">
+            {volist name='carouselimgList' id='vo'}
+                {switch name="$key"}
+                    {case value="0" break="1"}
+                        <span class="on"></span>
+                    {/case}
+                    {default}
+                        <span></span>
+                {/switch}
+            {/volist}
+        </div>
+    </div>
+</div>

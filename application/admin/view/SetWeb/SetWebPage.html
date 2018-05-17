@@ -1,0 +1,206 @@
+    {include file="base/header"/}<!--引入网站头部-->
+    <title>网站设置</title>
+</head>
+
+<body id="body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        {include file='base/headernavigationBar'/} <!—headernavigationBa.html-->
+    </div>
+
+    <!-- 左靠边导航栏 -->
+    {include file='base/navigationBar'/} <!—引入navigationBar.html-->
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <blockquote class="layui-elem-quote">管理网站信息</blockquote>
+        <div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
+            <form action="SetWeb" enctype="multipart/form-data" method="post" id="form1" class="layui-form">
+                <!--文本框-->
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>网站头部信息</legend>
+                </fieldset>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">首页:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="indexName" value="{$web.indexName|default=''}" name="indexName" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">游戏页:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="gameName" value="{$web.gameName|default=''}" name="gameName" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">新闻页:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="newsName" value="{$web.newsName|default=''}" name="newsName" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">关于我们:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="aboutAsName" value="{$web.aboutAsName|default=''}" name="aboutAsName" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">加入我们:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="joinUsName" value="{$web.joinUsName|default=''}" name="joinUsName" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <!--图片上传,上传的js脚本在本页面最下面-->
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>微信二维码</legend>
+                </fieldset>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">上传二维码</button>
+                    <div class="layui-upload-list">
+                            <img class="layui-upload-img" {$img|default=''} id="demo1" style="width: 120px;height: 120px">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>网站logo</legend>
+                </fieldset>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="logo">上传logo</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" {$logo|default=''} id="logo1" style="width: 120px;height: 120px">
+                        <p id="demologo"></p>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>新浪微博链接——格式例如:https://www.baidu.com/</legend>
+                </fieldset>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">微博链接:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="weiBoLink" value="{$web.weiBoLink|default=''}" name="weiBoLink" required  lay-verify="required" placeholder="请输入微博链接" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>网站底部信息</legend>
+                </fieldset>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">公司地址:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="address" value="{$web.address|default=''}" name="address" required  lay-verify="required" placeholder="请输入公司地址" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">联系方式:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="contactInfo" value="{$web.contactInfo|default=''}" name="contactInfo" required  lay-verify="required" placeholder="请输入联系方式" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">版权信息:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="copyright" value="{$web.copyright|default=''}" name="copyright" required  lay-verify="required" placeholder="请输入版权信息" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label ">备案号:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="recordNum" value="{$web.recordNum|default=''}" name="recordNum" required  lay-verify="required" placeholder="请输入备案号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <!--id-->
+                <input type="hidden" name="id" value="{$web.Id|default=''}">
+
+                <!--提交按钮-->
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        {include file='base/footer'/} <!—headernavigationBa.html-->
+    </div>
+</div>
+</body>
+    <script>
+        layui.use('upload', function(){
+            var $ = layui.jquery
+                    ,upload = layui.upload;
+
+            //二维码上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                ,url: 'getQRCode'
+                ,accept: 'images'
+                ,exts:'jpg|png|gif|bmp|jpeg'
+                ,size:2*1024 //2mb
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                ,done: function(res){
+                    //如果上传失败
+                    if(res.code > 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+            //logo上传
+            var uploadInst = upload.render({
+                elem: '#logo'
+                ,url: 'getLogo'
+                ,accept: 'images'
+                ,exts:'jpg|png|gif|bmp|jpeg'
+                ,size:2*1024 //2mb
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#logo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                ,done: function(res){
+                    //如果上传失败
+                    if(res.code > 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demologo');
+                    demoText.html('<a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+    </script>
+</html>

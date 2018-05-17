@@ -1,0 +1,108 @@
+<!--引入layui文件和jQuery文件（jQuery文件不是必须）-->
+<link rel="stylesheet" href="layui/css/layui.css"/>
+<script type="text/javascript" src="static/js/jquery-3.2.1.js"></script>
+<script src="layui/layui.js" merge="true" type="text/javascript"></script>
+
+<blockquote class="layui-elem-quote">
+    多文件上传列表的案例，这里限制了上传文件的个数：最大三个文件
+</blockquote>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>高级应用：制作一个多文件列表</legend>
+</fieldset>
+
+<div class="layui-upload">
+    <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+    <div class="layui-upload-list">
+        <table class="layui-table">
+            <thead>
+            <tr><th>文件名</th>
+                <th>大小</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr></thead>
+            <tbody id="demoList"></tbody>
+        </table>
+    </div>
+    <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+</div>
+
+<script>
+    layui.use('upload', function(){
+        var $ = layui.jquery
+                ,upload = layui.upload;
+
+        var num = 0;//用来记录已经成功选择的文件数量
+
+        //多文件列表示例
+        var demoListView = $('#demoList')
+                ,uploadListIns = upload.render({
+            elem: '#testList' //指向容器选择器
+            ,url: 'test' //上传提交到哪里
+            ,field: 'file' //指定上传文件的字段名
+            ,accept: 'file' //允许上传所有文件
+            ,multiple: true //开启多文件上传
+            ,auto: false //不自动上传
+//            ,number : 3
+              /* number为设置同时上传的最大文件个数，这个和下面用num来计数实现的效果不一样。
+              * num哪怕已经上传的文件也会计算在内，即在本页面的寿命内只能上传三个文件
+              * number属性是提交了三个还可继续提交三个
+              * */
+            ,bindAction: '#testListAction' //   由id="testListAction"的按钮触发上传操作
+            ,choose: function(obj){
+                /* 判断并记录当前选择的文件数量 */
+                if(num<3){
+                    num++
+                }else{
+                    layer.msg("上传文件不能大于3个");//弹出提示信息
+                    return false;
+                }
+
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function(index, file, result){
+                    var tr = $(['<tr id="upload-'+ index +'">'
+                        ,'<td>'+ file.name +'</td>'
+                        ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+                        ,'<td>等待上传</td>'
+                        ,'<td>'
+                        ,'<button class="layui-btn layui-btn-mini demo-reload layui-hide">重传</button>'
+                        ,'<button class="layui-btn layui-btn-mini layui-btn-danger demo-delete">删除</button>'
+                        ,'</td>'
+                        ,'</tr>'].join(''));
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function(){
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function(){
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        num--;//删除一个文件的选择之后，记录数相应的减少
+                    });
+
+                    demoListView.append(tr);
+                });
+            }
+            ,done: function(res, index, upload){
+                if(res.code == 0){ //上传成功
+                    var tr = demoListView.find('tr#upload-'+ index)
+                            ,tds = tr.children();
+                    tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                    tds.eq(3).html(''); //清空操作
+//                    layer.msg(res.msg);//提示成功信息
+                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                }
+                this.error(index, upload);
+            }
+            ,error: function(index, upload){
+                var tr = demoListView.find('tr#upload-'+ index)
+                        ,tds = tr.children();
+                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+//                layer.msg(res.msg);//提示错误信息
+            }
+        });
+    });
+</script>

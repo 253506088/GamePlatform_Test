@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{$web.gameName|default='游戏中心'}</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+
+	<body>
+		<!--网站顶部-->
+		<div class="top spec">
+				{include file='base/navigationBar'/} <!—引入navigationBar.html-->
+		</div>
+		<!--网站内容-->
+		<div class="game">
+			<div class="wrap">
+
+				<div>
+					<ul>
+						{volist name='list' id='vo'}
+							<li>
+								<a href="{$vo.Link}">
+									<img src="static/game/{$vo.Url}"/>
+									<p class="p_game_name">{$vo.Name}</p>
+									<p class="p_game_detail">{$vo.Describe}</p>
+								</a>
+							</li>
+						{/volist}
+					</ul>
+				</div>
+
+
+			</div>
+		</div>
+		<div class="foot">
+			<div class="page">
+				{$list->render()|default=''}<!--分页的页码选择-->
+			</div>
+		</div>
+		<!--网站底部-->
+		{include file='base/footer'/} <!—footer.html-->
+	</body>
+
+</html>
+<script type="text/javascript" src="js/jquery.js"></script>
+<!--banner js-->
+<script type="text/javascript">
+	var n = 0;
+	var $page = $(".dot span");
+	var $li = $(".banner ul li")
+
+	$page.click(function() {
+		n = $(this).index();
+		slide();
+		$page.eq(n).addClass("on").siblings().removeClass("on");
+	})
+	$(".banner").hover(function() {
+		clearInterval(timer);
+	}, function() {
+		autoPlay();
+	})
+	$page.hover(function() {
+		$(this).addClass("on").siblings().removeClass("on");
+	})
+	autoPlay();
+
+	function autoPlay() {
+		timer = setInterval(function() {
+			n++;
+			n %= 3;
+			slide();
+		}, 3000)
+	}
+
+	function slide() {
+		$page.eq(n).addClass("on").siblings().removeClass("on");
+		$li.eq(n).show().siblings().hide();
+	}
+</script>
+<script type="text/javascript">
+	$(function() {
+		showScroll();
+
+		function showScroll() {
+			$(window).scroll(function() {
+				var scrollValue = $(window).scrollTop();
+				scrollValue > 100 ? $('.top').fadeOut() : $('.top').fadeIn();
+			});
+		}
+	})
+</script>

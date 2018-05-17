@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>游戏详情</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+
+	<body>
+		<!--网站顶部-->
+		{include file='base/navigationBar'/} <!—引入navigationBar.html-->
+		<!--网站banner-->
+		{include file='base/carouselimg'/} <!—carouselimg.html-->
+		<!--网站内容-->
+		<div class="zhuti_content">
+			<div class="wrap">
+				<div class="zhuti">
+					<div class="about_top">
+						<p><span>游戏</span>资讯</p>
+						<p class="p_en">Game News</p>
+					</div>
+					<div class="new_detail">
+						<div class="new_detail">
+							<div class="new_detail_top">
+								<p>{$new.Name}</p>
+							</div>
+							<div class="new_detail_con">
+								{$new.Content}
+							</div>
+							<div class="prev_next">
+								<p>{$upId}</p>
+								<p>{$downId}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--网站底部-->
+		{include file='base/footer'/} <!—footer.html-->
+	</body>
+
+</html>
+<script type="text/javascript" src="js/jquery.js"></script>
+<!--banner js-->
+<script type="text/javascript">
+	var n = 0;
+	var $page = $(".dot span");
+	var $li = $(".banner ul li")
+
+	$page.click(function() {
+		n = $(this).index();
+		slide();
+	})
+	$(".banner").hover(function() {
+		clearInterval(timer);
+	}, function() {
+		autoPlay();
+	})
+	$page.hover(function() {
+		$(this).addClass("on").siblings().removeClass("on");
+	})
+	autoPlay();
+
+	function autoPlay() {
+		timer = setInterval(function() {
+			n++;
+			n %= 3;
+			slide();
+		}, 3000)
+	}
+
+	function slide() {
+		$page.eq(n).addClass("on").siblings().removeClass("on");
+		$li.eq(n).fadeIn().siblings().hide();
+	}
+</script>
+<script type="text/javascript">
+	$(function() {
+		showScroll();
+
+		function showScroll() {
+			$(window).scroll(function() {
+				var scrollValue = $(window).scrollTop();
+				scrollValue > 100 ? $('.top').fadeOut() : $('.top').fadeIn();
+			});
+		}
+	})
+</script>

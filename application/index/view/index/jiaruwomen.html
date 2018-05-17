@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>{$web.joinUsName|default='加入我们'}</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+
+	<body>
+		<!--网站顶部-->
+		{include file='base/navigationBar'/} <!—引入navigationBar.html-->
+		<!--网站banner-->
+		{include file='base/carouselimg'/} <!—carouselimg.html-->
+		<!--网站内容-->
+		<div class="zhuti_content">
+			<div class="wrap">
+				<div class="zhuti">
+					<div class="about_top">
+						<p><span>加入</span>我们</p>
+						<p class="p_en">Join Us</p>
+					</div>
+					<div class="join">
+						<div class="join_con">
+							<ul>
+								{volist name='list' id='vo'}
+									<li>
+										<a href="{$vo.Link}">
+											<div class="join_con_top">
+												<span></span><p>{$vo.Position}</p>
+											</div>
+											<div class="join_con_detail">
+												<p class="p_jiben">基本信息</p>
+												<p>所属部门：{$vo.Department}</p>
+												<p>工作性质：{$vo.Nature}</p>
+												<p>人数：{$vo.Number}</p>
+												<p>预期月薪：{$vo.Salary}</p>
+												<p>发布时间：{$vo.Time}</p>
+											</div>
+										</a>
+									</li>
+								{/volist}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="foot">
+			<div class="page">
+				{$list->render()|default=''}<!--分页的页码选择-->
+			</div>
+		</div>
+		<!--网站底部-->
+		{include file='base/footer'/} <!—footer.html-->
+	</body>
+
+</html>
+<script type="text/javascript" src="js/jquery.js"></script>
+<!--banner js-->
+<script type="text/javascript">
+	var n = 0;
+	var $page = $(".dot span");
+	var $li = $(".banner ul li")
+
+	$page.click(function() {
+		n = $(this).index();
+		slide();
+	})
+	$(".banner").hover(function() {
+		clearInterval(timer);
+	}, function() {
+		autoPlay();
+	})
+	$page.hover(function() {
+		$(this).addClass("on").siblings().removeClass("on");
+	})
+	autoPlay();
+
+	function autoPlay() {
+		timer = setInterval(function() {
+			n++;
+			n %= 3;
+			slide();
+		}, 3000)
+	}
+
+	function slide() {
+		$page.eq(n).addClass("on").siblings().removeClass("on");
+		$li.eq(n).fadeIn().siblings().hide();
+	}
+</script>
+<script type="text/javascript">
+	$(function() {
+		showScroll();
+
+		function showScroll() {
+			$(window).scroll(function() {
+				var scrollValue = $(window).scrollTop();
+				scrollValue > 100 ? $('.top').fadeOut() : $('.top').fadeIn();
+			});
+		}
+	})
+</script>

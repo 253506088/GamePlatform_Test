@@ -1,0 +1,125 @@
+{include file="base/header"/}<!--引入网站头部-->
+<title>管理轮播图</title>
+</head>
+
+<body id="body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        {include file='base/headernavigationBar'/} <!—headernavigationBa.html-->
+    </div>
+
+    <!-- 左靠边导航栏 -->
+    {include file='base/navigationBar'/} <!—引入navigationBar.html-->
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <blockquote class="layui-elem-quote">管理轮播图</blockquote>
+        <table class="layui-table" lay-filter="demo" lay-data="{
+                        width: 1700,
+                        height:'full-180',
+                        url:'pageData',
+                        page:true,
+                        id:'idTest',
+                        limit:18,
+                        done: function(res, curr, count){
+                        //如果是异步请求数据方式，res即为你接口返回的信息。
+                        //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                        console.log(res);
+
+                        //得到当前页码
+                        console.log(curr);
+
+                        //得到数据总量
+                        console.log(count);
+                      }
+                    }">
+            <thead>
+            <tr>
+                <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                <th lay-data="{field:'Id', width:205, sort: true, fixed: true}">Id</th>
+                <th lay-data="{field:'PageName', width:305}">页面名称</th>
+                <th lay-data="{field:'Img', width:305}">图片</th>
+                <th lay-data="{field:'Link', width:405, sort: true}">指向链接</th>
+                <th lay-data="{fixed: 'right', width:285, align:'center', toolbar: '#barDemo'}"></th>
+            </tr>
+            </thead>
+        </table>
+
+        <script type="text/html" id="barDemo">
+            <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+        <script>
+            /* 数据表的js */
+            layui.use('table', function(){
+                var table = layui.table;
+                //监听表格复选框选择
+                table.on('checkbox(demo)', function(obj){
+                    //console.log(obj)//输出选择信息
+                });
+
+                //监听工具条
+                table.on('tool(demo)', function(obj){
+                    var data = obj.data;
+                    if(obj.event === 'detail'){
+                        layer.msg('ID：'+ data.id + ' 的查看操作');
+                    } else if(obj.event === 'del'){
+                        /* 删除轮播图 */
+                        layer.confirm('真的删除该轮播图么？', function(index){
+                            var xmlhttp;
+                            if (window.XMLHttpRequest)
+                            {
+                                // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                                xmlhttp=new XMLHttpRequest();
+                            }
+                            else
+                            {
+                                // IE6, IE5 浏览器执行代码
+                                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                            }
+                            xmlhttp.onreadystatechange=function()
+                            {
+                                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                {
+                                    /* 发送成功之后的提示信息 */
+                                    if(xmlhttp.responseText==1){
+                                        layer.msg("删除成功");
+                                        obj.del();
+                                    }else{
+                                        layer.msg("删除失败");
+                                    }
+
+                                }
+                            }
+                            /* 选择POST模式发送ID */
+                            xmlhttp.open("POST","deleteCarouselimg",true);
+                            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                            xmlhttp.send("id="+JSON.stringify(data.Id));
+
+
+                            layer.close(index);
+                        });
+                    } else if(obj.event === 'edit'){
+                        /* 修改轮播图 */
+                        window.location.href="modifyCarouselimgPage?id="+JSON.stringify(data.Id);
+                    }
+                });
+
+
+                $('.demoTable .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            });
+        </script>
+    </div>
+
+    <div class="layui-footer">
+        {include file='base/footer'/} <!—headernavigationBa.html-->
+    </div>
+</div>
+</body>
+</html>

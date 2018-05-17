@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>{$web.indexName|default='首页'}</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+
+	<body>
+		<!--网站顶部导航条-->
+		{include file='base/navigationBar'/} <!—引入navigationBar.html-->
+		<!--网站banner,class="banner"里的轮播图的轮播和<span>标签的个数有关，保证有几个<li>标签就有几个<span>-->
+		{include file='base/carouselimg'/} <!—carouselimg.html-->
+		<!--网站内容-->
+		<div class="zhuti_content">
+			<div class="wrap">
+				<div class="index_con">
+					<div class="index_con_lf fl">
+						<div class="pro_lb">
+							<ul class="banner-img">
+								<!--这里的轮播只是单纯的和<li>标签的个数有关系-->
+								{volist name='gameList' id='vo'}
+									<li>
+										<a href="{$vo.Link}"><img src="static/carouselimg/{$vo.Url}"></a>
+									</li>
+								{/volist}
+							</ul>
+							<ul class="banner-circle"></ul>
+						</div>
+					</div>
+					<div class="index_con_rt fl">
+						<div class="index_con_rt_top">
+							<a href="news">
+								<p>更多</p><span></span></a>
+						</div>
+						<ul>
+							{volist name='newsList' id='vo'}
+								<li>
+									<a href="newsPane?id={$vo.Id}">
+										<p>{$vo.Name}</p>
+										<span>{$vo.Time}</span>
+									</a>
+								</li>
+							{/volist}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--网站底部-->
+		{include file='base/footer'/} <!—footer.html-->
+	</body>
+
+</html>
+<script type="text/javascript" src="js/jquery.js"></script>
+<!--banner js-->
+<script type="text/javascript">
+	var n = 0;
+	var $page = $(".dot span");
+	var $li = $(".banner ul li")
+	var count = $(".dot").find('span').length;
+
+	$page.click(function() {
+		n = $(this).index();
+		slide();
+	})
+	$(".banner").hover(function() {
+		clearInterval(timer);
+	}, function() {
+		autoPlay();
+	})
+	$page.hover(function() {
+		$(this).addClass("on").siblings().removeClass("on");
+	})
+	autoPlay();
+
+	function autoPlay() {
+		timer = setInterval(function() {
+			n++;
+			n %= count;
+			slide();
+		}, 3000)
+	}
+
+	function slide() {
+		$page.eq(n).addClass("on").siblings().removeClass("on");
+		$li.eq(n).fadeIn().siblings().hide();
+	}
+</script>
+<script type="text/javascript">
+	$(function() {
+		showScroll();
+
+		function showScroll() {
+			$(window).scroll(function() {
+				var scrollValue = $(window).scrollTop();
+				scrollValue > 100 ? $('.top').fadeOut() : $('.top').fadeIn();
+			});
+		}
+	})
+</script>
+<!--轮播js-->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var $banner = $('.pro_lb');
+		var $banner_ul = $('.banner-img');
+		var $btn = $('.banner-btn');
+		var $btn_a = $btn.find('a')
+		var v_width = $banner.width();
+		var page = 1;
+		var timer = null;
+		var btnClass = null;
+		var page_count = $banner_ul.find('li').length; //把这个值赋给小圆点的个数
+		var banner_cir = "<li class='selected' href='javascript:;'><a></a></li>";
+		for(var i = 1; i < page_count; i++) {
+			//动态添加小圆点
+			banner_cir += "<li><a href='javascript:;'></a></li>";
+		}
+
+		$('.banner-circle').append(banner_cir);
+		var cirLeft = $('.banner-circle').width() * (-0.5);
+		$('.banner-circle').css({
+			'marginLeft': cirLeft
+		});
+		$banner_ul.width(page_count * v_width);
+
+		function move(obj, classname) {
+			//手动及自动播放
+			if(!$banner_ul.is(':animated')) {
+				if(classname == 'prevBtn') {
+					if(page == 1) {
+						$banner_ul.animate({
+							left: -v_width * (page_count - 1)
+						});
+						page = page_count;
+						cirMove();
+					} else {
+						$banner_ul.animate({
+							left: '+=' + v_width
+						}, "slow");
+						page--;
+						cirMove();
+					}
+				} else {
+					if(page == page_count) {
+						$banner_ul.animate({
+							left: 0
+						});
+						page = 1;
+						cirMove();
+					} else {
+						$banner_ul.animate({
+							left: '-=' + v_width
+						}, "slow");
+						page++;
+						cirMove();
+					}
+				}
+			}
+		}
+
+		function cirMove() {
+			//检测page的值，使当前的page与selected的小圆点一致
+			$('.banner-circle li').eq(page - 1).addClass('selected')
+				.siblings().removeClass('selected');
+		}
+		$banner.mouseover(function() {
+			$btn.css({
+				'display': 'block'
+			});
+			clearInterval(timer);
+		}).mouseout(function() {
+			$btn.css({
+				'display': 'block'
+			});
+			clearInterval(timer);
+			timer = setInterval(move, 3000);
+		}).trigger("mouseout"); //激活自动播放
+		$btn_a.mouseover(function() {
+			//实现透明渐变，阻止冒泡
+			$(this).animate({
+				opacity: 0.6
+			}, 'fast');
+			$btn.css({
+				'display': 'block'
+			});
+			return false;
+		}).mouseleave(function() {
+			$(this).animate({
+				opacity: 0.3
+			}, 'fast');
+			$btn.css({
+				'display': 'block'
+			});
+			return false;
+		}).click(function() {
+			//手动点击清除计时器
+			btnClass = this.className;
+			clearInterval(timer);
+			timer = setInterval(move, 3000);
+			move($(this), this.className);
+		});
+		$('.banner-circle li').live('click', function() {
+			var index = $('.banner-circle li').index(this);
+			$banner_ul.animate({
+				left: -v_width * index
+			}, 'slow');
+			page = index + 1;
+			cirMove();
+		});
+	});
+</script>
